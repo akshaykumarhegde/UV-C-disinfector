@@ -4,6 +4,8 @@ const byte PIN_DIO = 8;
 #define echoPin 2 // attach pin D2 Arduino to pin Echo of HC-SR04
 #define trigPin 3 //attach pin D3 Arduino to pin Trig of HC-SR04
 #define santctrl 4
+long duration;
+int distance;
 int buttonState1 = 0;
 int buttonState2 = 0;
 int lastButtonState1 = 0;    
@@ -15,7 +17,10 @@ int count1;
 int state;
 int ctrl;
 int preval;
+int pmptime=1000;
 long previousMillis;
+long previousMillis1;
+int ledState=0;
 
 SevenSegmentTM1637    display(PIN_CLK, PIN_DIO);
 void setup() {
@@ -106,9 +111,43 @@ void millitmr(){
   }
   }
 }
- 
+void sanitiser() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2; 
+ // Serial.print("Distance: ");
+  Serial.print(distance);
+ // Serial.println(" cm");
+  if (distance < 5) {
+    millitmr();
+}  
+}
+
+ void mills1(){
+  unsigned long currentMillis1 = millis();
+if (currentMillis1 - previousMillis1 >= pmptime) {
+    previousMillis1 = currentMillis1;
+
+    // if the LED is off turn it on and vice-versa:
+    if (ledState == LOW) {
+      ledState = HIGH;
+    } else {
+      ledState = LOW;
+    }
+
+    // set the LED with the ledState of the variable:
+    digitalWrite(santctrl, ledState);
+  }
+}
+
 void loop(){
   step2();
   step1();
-  millitmr();
-  }
+  millitmr();  
+//sanitiser();
+mills1();
+ }
