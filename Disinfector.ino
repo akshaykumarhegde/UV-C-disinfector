@@ -1,9 +1,3 @@
- #include "SevenSegmentTM1637.h"
- const byte PIN_CLK = 9;   // define CLK pin (any digital pin)
-const byte PIN_DIO = 8;
-#define echoPin 2 // attach pin D2 Arduino to pin Echo of HC-SR04
-#define trigPin 3 //attach pin D3 Arduino to pin Trig of HC-SR04
-#define santctrl 4
 int buttonState1 = 0;
 int buttonState2 = 0;
 int lastButtonState1 = 0;    
@@ -16,10 +10,7 @@ int state;
 int ctrl;
 int preval;
 long previousMillis;
-
-SevenSegmentTM1637    display(PIN_CLK, PIN_DIO);
 void setup() {
-    display.begin();
   digitalWrite(A0, HIGH);
   Serial.print("oning"); 
   pinMode(LED_BUILTIN, OUTPUT );
@@ -56,8 +47,7 @@ void step2() {
     else {
       Serial.println("step2on");
        count++;
-         //Serial.println(count);
-         
+         Serial.println(count); 
         }
     delay(50);
   }
@@ -78,8 +68,6 @@ void step2() {
         count = 1;
      
         }
-        display.print(preval);
-//        display.clear();
         //Serial.println(count); 
 }
 
@@ -100,8 +88,6 @@ void millitmr(){
          delay(50);
          state++;
           Serial.println("reboot");
-          display.clear();
-          display.print(" ov");
          digitalWrite(A0, LOW);
   }
   }
