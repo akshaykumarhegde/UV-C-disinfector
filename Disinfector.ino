@@ -9,7 +9,7 @@ int lastButtonState2 = 0;
 int buttonPin1 =6;
 int buttonPin2=7;
 int count = 1;
-int count1;
+long count1;
 int state;
 int ctrl;
 int preval;
@@ -74,24 +74,22 @@ void loop(){
        digitalWrite(IRpump, LOW); 
     }
  }
- void millitmr(){
+void millitmr(){
   if(state == 1){
     if(ctrl == 0){
       Serial.println("led on");
+       digitalWrite(LED_BUILTIN, HIGH); 
          previousMillis = millis();
          ctrl++;
     } 
-         digitalWrite(LED_BUILTIN, HIGH); 
          unsigned long currentMillis = millis();
          if(currentMillis - previousMillis > count1){
          Serial.println("led off");
-         digitalWrite(LED_BUILTIN, LOW);
-          delay(50);
-         state++;
-          Serial.println("reboot");
-          display.clear();
-          display.print(" ov");
-         digitalWrite(A0, LOW);
+          digitalWrite(LED_BUILTIN, LOW);
+          display.print(" ov"); 
+         //delay(50);
+         state=0;
+        
   }
   }
 }
@@ -111,18 +109,18 @@ void mode() {
   }
   lastButtonState2 = buttonState2;
    if(count == 1){
-        count1 = 2000;
+        count1 = 120000;
            preval=2;}
           if(count == 2){
-        count1 = 5000;
+        count1 = 300000;
            preval=5;}
         if(count == 3){
-        count1 = 8000;
+        count1 = 480000;
            preval=8;}
         if(count == 4){
         count = 1;}
         display.print(preval);
-//        display.clear();
+        //display.clear();
         //Serial.println(count); 
 }
 void select() {
