@@ -14,6 +14,9 @@ int state;
 int ctrl;
 int preval;
 long previousMillis;
+int rst =5;
+int r=11;
+int g=10;
 
 SevenSegmentTM1637    display(PIN_CLK, PIN_DIO);
 
@@ -30,15 +33,21 @@ unsigned long IRpreviousMillis = 0;
 
 void setup() {
       display.begin();
-  digitalWrite(A0, HIGH);
+  digitalWrite(rst, HIGH);
   Serial.print("oning"); 
   pinMode(LED_BUILTIN, OUTPUT );
   pinMode(A0, OUTPUT);
+  pinMode(rst, OUTPUT);
+      pinMode(r, OUTPUT );
+  digitalWrite(r, HIGH);
+        pinMode(g, OUTPUT );
+  digitalWrite(g, HIGH);
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
   // initialize the button pin as a input:
   pinMode(IRbuttonPin3, INPUT);
   pinMode(IRpump,OUTPUT); 
+   digitalWrite(g, LOW);
   // initialize the LED as an output:
   // initialize serial communication:
   Serial.begin(9600);
@@ -78,7 +87,8 @@ void millitmr(){
   if(state == 1){
     if(ctrl == 0){
       Serial.println("led on");
-       digitalWrite(LED_BUILTIN, HIGH); 
+       digitalWrite(LED_BUILTIN, HIGH);
+         digitalWrite(r, LOW); 
          previousMillis = millis();
          ctrl++;
     } 
@@ -86,6 +96,7 @@ void millitmr(){
          if(currentMillis - previousMillis > count1){
          Serial.println("led off");
           digitalWrite(LED_BUILTIN, LOW);
+          digitalWrite(g, HIGH); 
           display.print(" ov"); 
          //delay(50);
          state=0;
@@ -128,14 +139,15 @@ void select() {
   if (buttonState1 != lastButtonState1) {
     if (buttonState1 == HIGH) {
      // Serial.println("step1off");
-     //state++;
-    }
-    else {
-      Serial.println("step10n");
-      state++;
+       state++;
       if(state == 2){
         state = 0;
         }
+    }
+    else {
+      Serial.println("step10n");
+     
+       digitalWrite(rst, LOW);
     }
     delay(50);
   }
